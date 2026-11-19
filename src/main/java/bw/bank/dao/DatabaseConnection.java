@@ -1,5 +1,7 @@
 package bw.bank.dao;
 
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
@@ -27,15 +29,24 @@ public class DatabaseConnection {
 
     private static void initializeDatabase(Connection conn) {
         try {
-            Path schemaPath = Path.of("schema.sql");
-            if (Files.exists(schemaPath)) {
-                String sql = Files.readString(schemaPath);
-                for (String statement : sql.split(";")) {
-                    String trimmed = statement.trim();
-                    if (!trimmed.isEmpty()) {
-                        try (Statement stmt = conn.createStatement()) {
-                            stmt.execute(trimmed);
-                        }
+            String sql = null;
+            try (InputStream is = DatabaseConnection.class.getResourceAsStream("/schema.sql")) {
+                if (is != null) {
+                    sql = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+                }
+            }
+            if (sql == null && Files.exists(Path.of("schema.sql"))) {
+                sql = Files.readString(Path.of("schema.sql"));
+            }
+            if (sql == null || sql.isBlank()) {
+                throw new RuntimeException("schema.sql not found or empty!");
+            }
+
+            for (String statement : sql.split(";")) {
+                String trimmed = statement.trim();
+                if (!trimmed.isEmpty()) {
+                    try (Statement stmt = conn.createStatement()) {
+                        stmt.execute(trimmed);
                     }
                 }
             }
