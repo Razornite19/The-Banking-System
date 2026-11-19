@@ -17,6 +17,21 @@
   </properties>
 
   <dependencies>
+    <!-- JavaFX Controls (for GUI in Step 5) -->
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-controls</artifactId>
+      <version>21.0.2</version>
+    </dependency>
+
+    <!-- SQLite JDBC Driver (for Database in Step 2) -->
+    <dependency>
+      <groupId>org.xerial</groupId>
+      <artifactId>sqlite-jdbc</artifactId>
+      <version>3.45.3.0</version>
+    </dependency>
+
+    <!-- JUnit 5 (for Integration Testing in Step 6) -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
